@@ -64,37 +64,33 @@ public class WaitingList {
        
        if (isEmpty()) {
            head = newNode;
-       } else if (size == 1) {
            tail = newNode;
-           head.setNext(tail);
-       } else {
+       }
+       else {
            tail.setNext(newNode);
            tail = newNode;
        }
-       
        size++;
+       
     }
     
     public User dequeue() {
         if (isEmpty()) {
             throw new NoSuchElementException("The queue is empty.");
         }
-        User userRemoved = head.getUser();
-        
-        if (size == 1) {
-            head = null;
-            tail = null;
-        } else if (size == 2) {
-            head = tail;
-        } else {
-            head = head.getNext();
-        }
-        
+        User removed = head.getUser();
+        head = head.getNext();
         size--;
-        return userRemoved;
+        if (size == 0) {
+            tail = null;
+        }
+        return removed;
     }
     
     public User peek() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("The queue is empty.");
+        }
         return head.getUser();
     }
     
@@ -107,67 +103,59 @@ public class WaitingList {
     }
     
     public boolean contains(User user) {
-        boolean found = false;
-        Node curNode = head;
-        while(curNode != null || !found) {
-            found = curNode.getUser().equals(user);
-            curNode = curNode.getNext();
+        if (user == null) {
+            return false;
         }
-  
-        return found;
+        Node current = head;
+        while (current != null) {
+            if (current.getUser().equals(user)) {
+                return true;
+            }
+            current = current.getNext();
+        }
+        return false;
     }
     
     public int getPosition(User user) {
-        if (!contains(user)) {
-            return -1;
-        }
-        int curIndex = 1;
-        Node curNode = head;
-        
-        while (curNode != null) {
-            if (curNode.getUser().equals(user)) {
-                break;
+        int position = 1;
+        Node current = head;
+        while (current != null) {
+            if (current.getUser().equals(user)) {
+                return position;
             }
-            
-            curIndex++;
-            curNode = curNode.getNext();
+            current = current.getNext();
+            position++;
         }
-        
-        return curIndex;
+        return -1;
     }
     
     public boolean remove(User user) {
-        if (!contains(user)) {
+        if (user == null) {
             return false;
         }
-        
-        Node curNode = head;
-        
-        if (size == 1) {
-            if (user.equals(curNode.getUser())) {
-                head = null;
-                tail = null;
-            }
-        } else if (size == 2) {
-            if (user.equals(curNode.getUser())) {
-                head = tail;
-            } else if (user.equals(curNode.getNext().getUser())) {
-                tail = head;
-            }
-        } else {
-            while (curNode.getNext() != tail) {
-                if (user.equals(curNode.getNext().getUser())) {
-                    curNode.setNext(curNode.getNext().getNext());
-                }
-                curNode = curNode.getNext();
-            }
-            
-            if (curNode.getNext().getUser().equals(user)) {
-                tail = curNode;
-            }
+        Node previous = null;
+        Node current = head;
+        while (current != null && !current.getUser().equals(user)) {
+            previous = current;
+            current = current.getNext();
         }
-        
+        if (current == null) {
+            return false;
+        }
+        if (previous == null) {
+            head = current.getNext();
+        }
+        else {
+            previous.setNext(current.getNext());
+        }
+        if (current == tail) {
+            tail = previous;
+        }
         size--;
+        if (size == 0) {
+            head = null;
+            tail = null;
+        }
         return true;
     }
     
