@@ -1,3 +1,5 @@
+package src;
+
 /**
  *  A User class that tracks the user's name and HokiePID.
  * 

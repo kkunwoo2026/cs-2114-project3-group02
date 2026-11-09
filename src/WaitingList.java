@@ -1,3 +1,5 @@
+package src;
+
 import java.util.NoSuchElementException;
 
 public class WaitingList {
@@ -40,7 +42,7 @@ public class WaitingList {
     public WaitingList(String category) {
         
         if (category == null || category.isBlank()) {
-            throw new IllegalArgumentException("Name cannot be null or blank.");
+            throw new IllegalArgumentException("Category cannot be null or blank.");
         }
         
         this.category = category;
@@ -117,6 +119,10 @@ public class WaitingList {
     }
     
     public int getPosition(User user) {
+        if (user == null) {
+            return -1;
+        }
+
         int position = 1;
         Node current = head;
         while (current != null) {
