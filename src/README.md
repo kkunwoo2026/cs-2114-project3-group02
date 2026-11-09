@@ -28,7 +28,7 @@ The model currently appears to function, but comprehensive JUnit testing has not
 
 Bad requests are currently handled by the system, but the way error messages are displayed in the console still needs improvement. We plan to refine these messages so that users can better understand why their requests are rejected.
 
-## 6. Next Steps
+## Next Steps
 
 Development will focus on strengthening the current prototype, maintaining MVC separation, and preparing for the final build.
 
