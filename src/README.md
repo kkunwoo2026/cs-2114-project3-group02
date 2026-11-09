@@ -1,8 +1,32 @@
+## How to run the model
+Run ViewMain as java and follow through the instructions in the console. 
+By inserting the name and HokiePID, users will be able to reserve, take, and leave study rooms based on the number of the party.
+
 ## Reflection
 
+### 1. Changes from the Specification
+Our implementation stayed very close to the original specification. We spent a significant amount of time developing detailed method stubs and defining the responsibilities of each class before beginning implementation. As a result, most of our implementation work involved completing the methods that we had already planned rather than changing the original design.
 
+One implementation detail was the use of a contains() method in WaitingList to prevent duplicate requests from the same user. We also used HashSet and HashMap to organize requests with different party sizes and direct them to their corresponding waiting queues. These data structures helped us manage requests more efficiently.
 
+Overall, the original class structure and method responsibilities remained largely unchanged. Most of our decisions during implementation followed the original design.
 
+### 2. Model Independence
+Our model was designed to operate independently of the view. The model classes manage their own data and responsibilities without directly handling console input or output.
+
+The User, Room, and WaitingList classes handle user information, room reservations, and waiting-list operations. The controller coordinates these classes and communicates the results to the view.
+
+We did not need to move the model's core responsibilities into the view to make the application work. However, the model has not yet undergone independent testing, so its independence still needs to be verified through JUnit tests.
+
+### 3. Scope Unknowns
+One of the challenges we addressed was preventing duplicate reservation requests. We implemented a contains() method in WaitingList to check whether a user was already in a queue before accepting another request.
+
+We also figured out how to manage requests with different party sizes. By using HashSet and HashMap, we organized requests by the number of people in the party. We made different queues and sent the request to the appropriate queue.
+
+### 4. What Does Not Work Yet?
+The model currently appears to function, but comprehensive JUnit testing has not yet been completed. We plan to use the remaining development time to test individual model methods, verify edge cases, and ensure that the reservation and waiting-list workflows behave as expected.
+
+Bad requests are currently handled by the system, but the way error messages are displayed in the console still needs improvement. We plan to refine these messages so that users can better understand why their requests are rejected.
 
 ## 6. Next Steps
 
@@ -74,6 +98,6 @@ Generative AI was used as a development aid throughout the project. The followin
 | **Zachary** | Used AI to discuss design decisions and debug controller and view functionality. |
 | **Robert** | Did not use AI during the creation of the prototype. |
 | **Matthew** | |
-| **Kunwoo** | |
+| **Kunwoo** | Didn't use AI during the creation of User class. |
 
 All AI-generated suggestions were reviewed and adapted to the project's requirements. Team members are responsible for understanding their code and being able to explain their implementation during the grading session.
