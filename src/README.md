@@ -97,7 +97,7 @@ Generative AI was used as a development aid throughout the project. The followin
 |---|---|
 | **Zachary** | Used AI to discuss design decisions and debug controller and view functionality. |
 | **Robert** | Did not use AI during the creation of the prototype. |
-| **Matthew** | |
+| **Matthew** | Used AI to help with design plans and account for bad inputs|
 | **Kunwoo** | Didn't use AI during the creation of User class. |
 
 All AI-generated suggestions were reviewed and adapted to the project's requirements. Team members are responsible for understanding their code and being able to explain their implementation during the grading session.
