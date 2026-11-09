@@ -72,7 +72,7 @@ Generative AI was used as a development aid throughout the project. The followin
 | Team Member | Generative AI Usage |
 |---|---|
 | **Zachary** | Used AI to discuss design decisions and debug controller and view functionality. |
-| **Robert** | |
+| **Robert** | Did not use AI during the creation of the prototype. |
 | **Matthew** | |
 | **Kunwoo** | |
 
