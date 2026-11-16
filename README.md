@@ -90,10 +90,10 @@ The following table identifies each team member's primary contributions to the f
 
 | Team Member | Classes / Components | Contributions |
 |---|---|---|
-| **Zachary** | `ControllerMain.java`, `ViewMain.java` | Implemented controller functionality, room matching, queue coordination, and the console interface. |
-| **Robert** | `WaitingList.java` | Developed the custom linked queue and its core operations. |
-| **Matthew** | `Room.java` | Implemented room information, availability, and offer/reservation management. |
-| **Kunwoo** | `User.java` | Implemented student information and user identification. |
+| **Zachary** | `HokieHoldStorage.java` | Implemented the save/load feature for the model, changing ControllerMain.java as needed |
+| **Robert** | `WaitingListTest.java` | Developed the test cases for WaitingList.java |
+| **Matthew** | `RoomTest.java` | Implemented JUnit test cases for Room.java |
+| **Kunwoo** | `UserTest.java` | Implemented JUnit test cases for User.java |
 | **Entire Team** | Integration | Collaborated on combining components and reviewing overall application functionality. |
 
 ---
@@ -107,6 +107,6 @@ Generative AI was used as a development aid throughout the project. The followin
 | **Zachary** | Used AI to discuss design decisions and debug controller and view functionality. |
 | **Robert** | Did not use AI during the creation of the prototype. |
 | **Matthew** | Used AI to help with design plans and account for bad inputs|
-| **Kunwoo** | Didn't use AI during the creation of User class and the testings. |
+| **Kunwoo** | Didn't use AI during the creation of UserTest class and the testings. |
 
 All AI-generated suggestions were reviewed and adapted to the project's requirements. Team members are responsible for understanding their code and being able to explain their implementation during the grading session.
