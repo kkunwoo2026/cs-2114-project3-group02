@@ -11,6 +11,8 @@ One implementation detail was the use of a contains() method in WaitingList to p
 
 Overall, the original class structure and method responsibilities remained largely unchanged. Most of our decisions during implementation followed the original design.
 
+What changed from our D3 plan: Since D3 we wrote JUnit tests for Room, WaitingList, and User, and we started the save feature. 
+
 ### 2. Model Independence
 Our model was designed to operate independently of the view. The model classes manage their own data and responsibilities without directly handling console input or output.
 
@@ -23,34 +25,41 @@ One of the challenges we addressed was preventing duplicate reservation requests
 
 We also figured out how to manage requests with different party sizes. By using HashSet and HashMap, we organized requests by the number of people in the party. We made different queues and sent the request to the appropriate queue.
 
-### 4. What Does Not Work Yet?
-The model currently appears to function, but comprehensive JUnit testing has not yet been completed. We plan to use the remaining development time to test individual model methods, verify edge cases, and ensure that the reservation and waiting-list workflows behave as expected.
+### 4. How we are implementing changes, prototype #2
+For this deliverable we are implementing a save feature, so HokieHold can save its data and reload it between runs. This is the Persistent Data feature we named in our D3 Next Steps. As we predicted in D3, the feature is a new data-storage class that ControllerMain coordinates. WaitingList keeps its existing queue operations, and ViewMain stays responsible only for console input and output, with no file handling.
 
-Bad requests are currently handled by the system, but the way error messages are displayed in the console still needs improvement. We plan to refine these messages so that users can better understand why their requests are rejected.
+So far the change has not crossed the model/view line. The view does not need to know how saving works, because saving goes through the controller and the storage class.
+
+### 5. What Does Not Work Yet?
+The save feature is still being implemented, so saving and loading is not finished or fully tested yet. Once it works, we will add JUnit tests for the new model methods, including a bad-input case for each.
+
+We plan to continue working on the user interface and better prompt when there is a bad input
 
 ## Next Steps
 
-Development will focus on strengthening the current prototype, maintaining MVC separation, and preparing for the final build.
+Development will focus on finishing the save feature, strengthening the current prototype, and maintaining MVC separation for the final build.
 
 ### Development Priorities
 
 | Priority | Focus | Planned Work |
 |:---:|---|---|
-| **1** | Testing & Reliability | Test queue operations, invalid inputs, duplicate users, room matching, and offer handling. |
+| **1** | Save feature | 	Finish saving and loading data between runs through a new storage class coordinated by ControllerMain. |
 | **2** | MVC Separation | Verify that the model operates independently of the view and that application logic remains in the controller. |
-| **3** | Deliverable 4 | Implement one non-trivial feature beyond the current MVP. |
+| **3** | Testing & Reliability | Implement JUnit test for the save feature. |
 | **4** | Final Build | Complete testing, resolve remaining issues, update documentation, and prepare the final demonstration. |
 
-### Proposed New Feature — Persistent Data
-
-Allow HokieHold to save and reload relevant application information between runs.
+### Stretch Goals 
+- Continuing to build on the save feature and get it into a spot that we are satisfied with
+- Continuing to improve on the UI and make it better for the user 
 
 **Anticipated design changes:**
-
 - **New class:** A data-storage component to manage saving and loading.
 - **ControllerMain:** Coordinate data storage with the application.
 - **WaitingList:** Retain its existing queue operations.
 - **ViewMain:** Remain responsible for console interaction without handling file storage.
+
+**3-minute Demo** 
+We will start the program, reserve a room, join a waiting list, and accept a room offer. Then we will show the save feature by saving, restarting, and showing that the data reloaded. We will finish with a bad input being rejected without a crash.
 
 ### Task Ownership
 
@@ -66,9 +75,9 @@ Allow HokieHold to save and reload relevant application information between runs
 
 Before the final submission, the team plans to verify:
 
-- [ ] FIFO ordering and all core queue operations.
-- [ ] Correct handling of invalid inputs and duplicate users.
-- [ ] Room capacity matching and queue position preservation.
+- [Done] FIFO ordering and all core queue operations.
+- [Done] Correct handling of invalid inputs and duplicate users.
+- [Done] Room capacity matching and queue position preservation.
 - [ ] Successful acceptance, declining, and reassignment of room offers.
 - [ ] Model independence from the view.
 - [ ] Correct saving and loading if the proposed feature is implemented.
