@@ -1,4 +1,7 @@
-## How to run the model
+| **Zachary** | `ControllerMain.java`, `ViewMain.java` | Implemented controller functionality, room matching, queue coordination, and the console interface. |
+| **Robert** | `WaitingList.java` | Developed the custom linked queue and its core operations. |
+| **Matthew** | `Room.java` | Implemented room information, availability, and offer/reservation management. |
+| **Kunwoo** | `User.java` | Implemented student information and user identification. |## How to run the model
 Run ViewMain as java and follow through the instructions in the console. 
 By inserting the name and HokiePID, users will be able to reserve, take, and leave study rooms based on the number of the party.
 
