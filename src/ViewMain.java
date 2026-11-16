@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.io.IOException;
 
 /**
  * Console interface for the HokieHold prototype.
@@ -45,6 +46,7 @@ public class ViewMain {
 
             try {
                 switch (choice) {
+                    
                     case "1":
                         joinWaitingLine(controller);
                         break;
@@ -70,6 +72,14 @@ public class ViewMain {
                         showMatchingRooms(controller);
                         break;
                     case "0":
+                        try {
+                            controller.saveWaitingLists();
+                            displayMessage("Waiting lists saved successfully.");
+                        }
+                        catch (IOException exception) {
+                            displayMessage("Could not save waiting lists: "
+                                + exception.getMessage());
+                        }
                         running = false;
                         displayMessage("Thank you for using HokieHold.");
                         break;
@@ -281,12 +291,17 @@ public class ViewMain {
         System.out.println("Meeting room line: " + meetingRoomCount);
     }
 
-    /** Displays a general application message. */
+    /** Displays a general application message. 
+     * @param message being displayed
+     * */
     public void displayMessage(String message) {
         System.out.println(message);
     }
 
-    /** Displays a student's 1-based queue position. */
+    /** Displays a student's 1-based queue position. 
+     * @param category 
+     * @param position in line
+     */
     public void displayQueuePosition(String category, int position) {
         if (position < 1) {
             System.out.println("You are not currently in the " + category + " line.");
@@ -295,5 +310,16 @@ public class ViewMain {
             System.out.println("Your position in the " + category + " line is "
                 + position + ".");
         }
+    }
+    /**
+     * Adds a student profile restored from saved data.
+     *
+     * @param user student to remember
+     */
+    public void rememberUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null.");
+        }
+        knownUsers.put(user.getHokiePID(), user);
     }
 }

@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * Controls the HokieHold room waiting-line prototype.
@@ -31,7 +34,114 @@ public class ControllerMain {
     // each waiting user's requested group size separately.
     private final Map<User, Integer> requestedGroupSizes;
     private final Map<Room, LocalDateTime> sessionStartTimes;
+    
     private final Map<Room, Integer> sessionDurations;
+    private final HokieHoldStorage storage;
+    
+    /**
+     * Saves both waiting lines while preserving their current order.
+     *
+     * @throws IOException if the save file cannot be written
+     */
+    public void saveWaitingLists() throws IOException {
+        List<String> records = new ArrayList<String>();
+
+        saveQueueRecords(studyRoomQueue, STUDY, records);
+        saveQueueRecords(meetingRoomQueue, MEETING, records);
+
+        storage.save(records);
+    }
+
+    /**
+     * Loads students from the save file into their waiting lines.
+     * Invalid records are skipped.
+     *
+     * @throws IOException if the save file cannot be read
+     */
+    public void loadWaitingLists() throws IOException {
+        List<String> records = storage.load();
+
+        for (String record : records) {
+            try {
+                String[] fields = record.split("\\|", -1);
+
+                if (fields.length != 4) {
+                    continue;
+                }
+
+                String pid = decodeField(fields[0]);
+                String name = decodeField(fields[1]);
+                String category = normalizeCategory(
+                    decodeField(fields[2]));
+                int groupSize = Integer.parseInt(fields[3]);
+
+                validateGroupSize(category, groupSize);
+
+                User user = new User(pid, name);
+                view.rememberUser(user);
+
+                if (!isUserInSystem(user)) {
+                    getQueue(category).enqueue(user);
+                    requestedGroupSizes.put(user, groupSize);
+                }
+            }
+            catch (IllegalArgumentException exception) {
+                // Skip malformed records instead of crashing.
+            }
+        }
+
+        offerAvailableRooms();
+        refreshView();
+    }
+
+    /**
+     * Copies a queue's records without changing its original order.
+     *
+     * @param queue queue being saved
+     * @param category queue category
+     * @param records destination for saved records
+     */
+    private void saveQueueRecords(
+        WaitingList queue, String category, List<String> records) {
+
+        int originalSize = queue.size();
+
+        for (int i = 0; i < originalSize; i++) {
+            User user = queue.dequeue();
+            Integer groupSize = requestedGroupSizes.get(user);
+
+            if (groupSize != null) {
+                records.add(encodeField(user.getHokiePID()) + "|"
+                    + encodeField(user.getName()) + "|"
+                    + encodeField(category) + "|"
+                    + groupSize);
+            }
+
+            queue.enqueue(user);
+        }
+    }
+
+    /**
+     * Encodes text so names and IDs cannot break the record format.
+     *
+     * @param value text to encode
+     * @return encoded text
+     */
+    private String encodeField(String value) {
+        return Base64.getEncoder().encodeToString(
+            value.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Decodes a saved text field.
+     *
+     * @param value encoded text
+     * @return decoded text
+     */
+    private String decodeField(String value) {
+        byte[] decoded = Base64.getDecoder().decode(value);
+        return new String(decoded, StandardCharsets.UTF_8);
+    }
 
     /**
      * Creates a controller using the supplied rooms and view.
@@ -57,6 +167,7 @@ public class ControllerMain {
         this.requestedGroupSizes = new HashMap<User, Integer>();
         this.sessionStartTimes = new HashMap<Room, LocalDateTime>();
         this.sessionDurations = new HashMap<Room, Integer>();
+        this.storage = new HokieHoldStorage("hokiehold-data.txt");
     }
 
     /**
@@ -446,6 +557,15 @@ public class ControllerMain {
 
         ViewMain mainView = new ViewMain();
         ControllerMain controller = new ControllerMain(sampleRooms, mainView);
+
+        try {
+            controller.loadWaitingLists();
+        }
+        catch (IOException exception) {
+            System.out.println("Could not load saved waiting lists: "
+                + exception.getMessage());
+        }
+
         mainView.runApplication(controller);
     }
 }
